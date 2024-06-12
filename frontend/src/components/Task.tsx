@@ -1,5 +1,6 @@
 import React from 'react';
 import {updateTask, deleteTask} from '../services/api';
+import { Button } from 'react-bootstrap';
 import {Task} from "../types";
 
 const Task: React.FC<{ task: Task }> = ({task}) => {
@@ -16,11 +17,15 @@ const Task: React.FC<{ task: Task }> = ({task}) => {
 
   return (
       <div>
-        <h3>{task.title}</h3>
+        <h5>{task.title}</h5>
         <p>{task.description}</p>
         <p>Status: {task.status}</p>
-        <button onClick={handleStatusChange}>Toggle Status</button>
-        <button onClick={handleDelete}>Delete</button>
+        <Button variant="success" onClick={handleStatusChange}>
+          {task.status === 'pending' ? 'Complete' : 'Undo'}
+        </Button>
+        <Button variant="danger" onClick={handleDelete}>
+          Delete
+        </Button>
       </div>
   );
 };

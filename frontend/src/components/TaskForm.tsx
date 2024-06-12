@@ -52,10 +52,11 @@ const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreated }) => {
             <option value="completed">Completed</option>
           </Form.Control>
         </Form.Group>
-        <br/>
+        <hr/>
         <Button variant="primary" type="submit">
           Add Task
         </Button>
+        <hr/>
       </Form>
   );
 };
