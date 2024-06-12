@@ -1,23 +1,35 @@
-import axios, { AxiosRequestConfig } from 'axios';
+// src/services/api.ts
+import axios, { AxiosResponse } from 'axios';
+import { Task } from '../types';
 
-const config: AxiosRequestConfig = {
+const api = axios.create({
   baseURL: 'http://localhost:5001/api',
+});
+
+// Fetch all tasks
+export const fetchTasks = async (): Promise<Task[]> => {
+  const response: AxiosResponse<Task[]> = await api.get('/tasks');
+  return response.data;
 };
 
-const api = axios.create(config);
-
-export const getTasks = async () => {
-  return api.get('/tasks');
+// Create a new task
+export const createTask = async (task: Task): Promise<Task> => {
+  const response: AxiosResponse<Task> = await api.post('/tasks', task);
+  return response.data;
 };
 
-export const createTask = async (task: any) => {
-  return api.post('/tasks', task);
+// Update an existing task
+export const updateTask = async (task: {
+  description: string;
+  _id?: string;
+  title: string;
+  status: string
+}): Promise<Task> => {
+  const response: AxiosResponse<Task> = await api.put(`/tasks/${task._id}`, task);
+  return response.data;
 };
 
-export const updateTask = async (id: string, task: any) => {
-  return api.put(`/tasks/${id}`, task);
-};
-
-export const deleteTask = async (id: string) => {
-  return api.delete(`/tasks/${id}`);
+// Delete a task
+export const deleteTask = async (taskId?: string): Promise<void> => {
+  await api.delete(`/tasks/${taskId}`);
 };

@@ -5,12 +5,12 @@ import {Task} from "../types";
 const Task: React.FC<{ task: Task }> = ({task}) => {
   const handleStatusChange = async (): Promise<void> => {
     const updatedTask = {...task, status: task.status === 'pending' ? 'completed' : 'pending'};
-    await updateTask(task.id, updatedTask);
+    await updateTask(updatedTask);
     window.location.reload();
   };
 
   const handleDelete = async (): Promise<void> => {
-    await deleteTask(task.id);
+    await deleteTask(task._id);
     window.location.reload();
   };
 

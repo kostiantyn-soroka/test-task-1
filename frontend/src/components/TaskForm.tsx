@@ -1,78 +1,62 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { createTask } from '../services/api';
+// src/components/TaskForm.tsx
+import React, { useState } from 'react';
+import { Form, Button } from 'react-bootstrap';
+import { Task } from '../types';
 
 interface TaskFormProps {
-  onTaskCreated: () => void;
+  onTaskCreated: (task: Task) => void;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreated }) => {
-  const [title, setTitle] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [status, setStatus] = useState<'pending' | 'completed'>('pending');
-  const [error, setError] = useState<string | null>(null);
 
-  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
-
-  const handleDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value);
-  };
-
-  const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setStatus(e.target.value as 'pending' | 'completed');
-  };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (title.trim() === '') {
-      setError('Title is required');
-      return;
-    }
-
-    try {
-      await createTask({ title, description, status });
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (title.trim()) {
+      onTaskCreated({ title, description, status });
       setTitle('');
       setDescription('');
-      setStatus('pending');
-      setError(null);
-      onTaskCreated();
-    } catch (err) {
-      setError('Failed to create task');
-      console.log(err);
+      setStatus('pending'); // Reset status to 'pending' after creating a task
     }
   };
 
   return (
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="title">Title</label>
-          <input
-              id="title"
+      <Form onSubmit={handleSubmit}>
+        <Form.Group>
+          <Form.Label>Title</Form.Label>
+          <Form.Control
               type="text"
               value={title}
-              onChange={handleTitleChange}
+              onChange={(e) => setTitle(e.target.value)}
               required
           />
-        </div>
-        <div>
-          <label htmlFor="description">Description</label>
-          <textarea
-              id="description"
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+              as="textarea"
               value={description}
-              onChange={handleDescriptionChange}
+              onChange={(e) => setDescription(e.target.value)}
           />
-        </div>
-        <div>
-          <label htmlFor="status">Status</label>
-          <select id="status" value={status} onChange={handleStatusChange}>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>Status</Form.Label>
+          <Form.Control
+              as="select"
+              value={status}
+              onChange={(e) => setStatus(e.target.value as 'pending' | 'completed')}
+          >
             <option value="pending">Pending</option>
             <option value="completed">Completed</option>
-          </select>
-        </div>
-        {error && <p>{error}</p>}
-        <button type="submit">Add Task</button>
-      </form>
+          </Form.Control>
+        </Form.Group>
+        <br/>
+        <Button variant="primary" type="submit">
+          Add Task
+        </Button>
+      </Form>
   );
 };
 
