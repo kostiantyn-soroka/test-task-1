@@ -2,9 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-
-// Create an Express application
-const app = express();
+import app from './app';
 
 // Middleware
 app.use(cors());

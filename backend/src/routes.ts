@@ -3,6 +3,15 @@ import { Task } from './models';
 
 const router = Router();
 
+router.get('/', async (req, res) => {
+  try {
+    const tasks = {};
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 router.get('/tasks', async (req, res) => {
   try {
     const tasks = await Task.find();
